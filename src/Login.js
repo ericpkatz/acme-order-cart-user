@@ -27,10 +27,13 @@ class Login extends Component{
     const { name, password } = this.state;
     const { onChange, login } = this;
     return (
-      <form onSubmit={ login }>
-        <input className='form-control' name='name' value={ name } onChange={ onChange } />
-        <input className='form-control' name='password' value={ password } onChange={ onChange } />
-        <button className='btn btn-primary'>Login</button>
+      <form className='jumbotron' onSubmit={ login }>
+        <h2>Login</h2>
+        <div className='form-group'>
+          <input placeholder='name' className='form-control' name='name' value={ name } onChange={ onChange } />
+        </div>
+        <input type='password' placeholder='password' className='form-control' name='password' value={ password } onChange={ onChange } />
+        <button style={{ marginTop: '10px'}} className='btn btn-primary'>Login</button>
       </form>
     );
   }

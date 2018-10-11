@@ -14,19 +14,6 @@ const Nav = ({ orders, products, path, cart, loggedIn, quantity, auth, logout })
         <Link className={ getClass('/')} to='/'>Home</Link>
       </li>
       {
-        loggedIn ? (
-            <li>
-              <button onClick={ logout }>Logout { auth.name }</button>
-            </li>
-            ): (
-            <li className='nav-item'>
-              <Link className={ getClass('/login')} to='/login'>
-                Login
-              </Link>
-            </li>
-        )
-      }
-      {
         loggedIn && (
             <Fragment>
               <li className='nav-item'>
@@ -35,6 +22,19 @@ const Nav = ({ orders, products, path, cart, loggedIn, quantity, auth, logout })
                 <Link to='/orders' className={ getClass('/orders')} >Orders ({ orders.length })</Link>
               </li>
           </Fragment>
+        )
+      }
+      {
+        loggedIn ? (
+            <li>
+              <button className='btn btn-primary' onClick={ logout }>Logout { auth.name }</button>
+            </li>
+            ): (
+            <li className='nav-item'>
+              <Link className={ getClass('/login')} to='/login'>
+                Login
+              </Link>
+            </li>
         )
       }
     </ul>

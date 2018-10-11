@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { reset, loadProducts, loadOrders, exchangeTokenForAuth } from './store';
+import { loadCount, reset, loadProducts, loadOrders, exchangeTokenForAuth } from './store';
 import { Route, HashRouter as Router } from 'react-router-dom';
 import Orders from './Orders';
 import Cart from './Cart';
@@ -49,28 +49,16 @@ const mapDispatchToProps = (dispatch)=> {
     init: ()=> {
       dispatch(exchangeTokenForAuth());
       dispatch(loadProducts());
-      /*
-      dispatch(loadProducts());
-      dispatch(loadOrders());
-      */
+      dispatch(loadCount());
     },
     reset: ()=> dispatch(reset())
   };
 };
 
-const mapStateToProps = ({ products, orders, auth })=> {
-  const itemsSold = orders.filter(order => order.status === 'ORDER')
-    .reduce((memo, order)=> {
-      memo = [...memo, ...order.lineItems];
-      return memo;
-    }, [])
-    .reduce((memo, lineItem)=> {
-      memo+= lineItem.quantity;
-      return memo;
-    }, 0);
+const mapStateToProps = ({ products, orders, auth, count })=> {
   const loggedIn = auth.id;
   return {
-    itemsSold,
+    itemsSold: count,
     products,
     auth,
     loggedIn
