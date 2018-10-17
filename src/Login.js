@@ -7,7 +7,8 @@ class Login extends Component{
     super();
     this.state = {
       name: '',
-      password: ''
+      password: '',
+      error: ''
     };
     this.onChange = this.onChange.bind(this);
     this.login = this.login.bind(this);
@@ -18,13 +19,15 @@ class Login extends Component{
     const { name, password } = this.state;
     const credentials = { name, password };
     this.props.login(credentials)
-      .catch(ex => console.log(ex));
+      .catch(ex => {
+        this.setState({ error: 'Bad credentials'});
+      });
   }
   onChange(ev){
     this.setState({[ev.target.name]: ev.target.value});
   }
   render(){
-    const { name, password } = this.state;
+    const { name, password, error } = this.state;
     const { onChange, login } = this;
     return (
       <form className='jumbotron' onSubmit={ login }>
@@ -34,6 +37,9 @@ class Login extends Component{
         </div>
         <input type='password' placeholder='password' className='form-control' name='password' value={ password } onChange={ onChange } />
         <button style={{ marginTop: '10px'}} className='btn btn-primary'>Login</button>
+        {
+          error
+        }
       </form>
     );
   }

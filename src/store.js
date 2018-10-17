@@ -178,7 +178,7 @@ const removeFromCart = (cart, lineItem)=> {
           .then( orders => dispatch(loadOrders(orders))); 
     }
     else {
-        return axios.delete(`/api/orders/${cart.id}/lineItems/${lineItem.id}`, axiosAuthHeader())
+        return axios.delete(`/api/users/${userId}/orders/${cart.id}/lineItems/${lineItem.id}`, axiosAuthHeader())
           .then( response => response.data)
           .then( orders => dispatch(loadOrders(orders))); 
     }

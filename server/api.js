@@ -10,7 +10,7 @@ const loggedIn = (req, res, next)=> {
 
 const isMe = (paramKey)=> {
   return (req, res, next)=> {
-    next(req.user.id === req.params[paramKey] ? null : {
+    next(req.user.isAdmin || req.user.id === req.params[paramKey] ? null : {
       status: 401
     });
   };
@@ -61,6 +61,28 @@ app.get('/count', (req, res, next)=> {
   .then( count => {
     res.send({ count });
   }) 
+  .catch(next);
+});
+
+app.get('/users/:id/orders', loggedIn, isMe('id'), async (req, res, next)=> {
+  const attr = {
+    userId: req.params.id,
+    status: 'CART'
+  };
+  let cart = await Order.findOne({
+    where: attr
+  });
+
+  if(!cart){
+    await Order.create(attr);
+  }
+  Order.findAll({
+    where: {
+      userId: req.params.id
+    },
+    include: [ LineItem ]
+  })
+  .then( orders => res.send(orders))
   .catch(next);
 });
 
