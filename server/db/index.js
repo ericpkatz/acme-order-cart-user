@@ -33,6 +33,7 @@ const syncAndSeed = ()=> {
         LineItem.create({ productId: foo.id, orderId: order2.id, quantity: 5 }),
         LineItem.create({ productId: bar.id, orderId: order1.id, quantity: 3 })
       ]);
+      //await LineItem.create({ productId: bar.id, orderId: order1.id, quantity: 3 })
     });
 };
 
