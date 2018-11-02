@@ -3,6 +3,7 @@ const LOAD_ORDERS = 'LOAD_ORDERS';
 const SET_AUTH = 'SET_AUTH';
 const SET_COUNT = 'SET_COUNT';
 
+import logger from 'redux-logger';
 import { createStore, applyMiddleware, combineReducers } from 'redux';
 import thunk from 'redux-thunk';
 
@@ -97,7 +98,7 @@ const reducer = combineReducers({
   count: countReducer
 });
 
-export default createStore(reducer, applyMiddleware(thunk));
+export default createStore(reducer, applyMiddleware(thunk, logger));
 
 
 const _loadProducts = (products)=>({

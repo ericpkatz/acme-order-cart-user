@@ -46,7 +46,7 @@ const mapDispatchToProps = (dispatch, { history })=> {
   return {
     createOrder: (cart)=> dispatch(createOrder(cart, history)),
     addToCart: (cart, product, lineItem)=> {
-      return dispatch(addToCart( cart, product, lineItem ));
+      return dispatch(addToCart( cart, product, 1, lineItem ));
     },
     removeFromCart: (cart, lineItem)=> {
       return dispatch(removeFromCart( cart, lineItem ));
