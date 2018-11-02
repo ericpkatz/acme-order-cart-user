@@ -153,12 +153,12 @@ const loadOrders = ()=> {
   }
 };
 
-const addToCart = (cart, product, lineItem)=> {
+const addToCart = (cart, product, quantity, lineItem)=> {
   return (dispatch, getState)=> {
     const state = getState();
     const userId = state.auth.id;
     if(lineItem){
-        return axios.put(`/api/users/${userId}/orders/${cart.id}/lineItems/${lineItem.id}`, { quantity: ++lineItem.quantity}, axiosAuthHeader())
+        return axios.put(`/api/users/${userId}/orders/${cart.id}/lineItems/${lineItem.id}`, { quantity: lineItem.quantity + quantity}, axiosAuthHeader())
           .then( response => response.data)
           .then( orders => dispatch(loadOrders(orders))); 
     }
