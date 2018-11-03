@@ -13,7 +13,7 @@ const exchangeTokenForAuth = (history)=> {
   return (dispatch)=> {
     const token = window.localStorage.getItem('token');
     if(!token){
-      return 
+      return; 
     }
     return axios.get('/api/auth', {
       headers: {
@@ -32,8 +32,9 @@ const exchangeTokenForAuth = (history)=> {
       
     })
     .catch( ex => {
-      console.log(ex);
-      window.localStorage.removeItem('token')
+      if(ex.response.status === 401){
+        window.localStorage.removeItem('token');
+      }
     })
   }
 }
@@ -153,37 +154,68 @@ const loadOrders = ()=> {
   }
 };
 
+const addToServerCart = (cart, product, quantity, lineItem)=> {
+    let url, method, body; 
+    if(lineItem){
+      url = `/api/users/${cart.userId}/orders/${cart.id}/lineItems/${lineItem.id}`;
+      method = 'put';
+      quantity = quantity + lineItem.quantity;
+      body = { quantity };
+
+    }
+    else {
+      url = `/api/users/${cart.userId}/orders/${cart.id}/lineItems`;
+      method = 'post';
+      body = {
+        quantity,
+        productId: product.id
+      };
+    }
+    return axios[method](url, body, axiosAuthHeader())
+      .then( response => response.data);
+};
+
+const removeFromServerCart = (cart, lineItem)=> {
+    const quantity = lineItem.quantity - 1;
+    let method, body;
+    const url = `/api/users/${cart.userId}/orders/${cart.id}/lineItems/${lineItem.id}`;
+    if(lineItem.quantity === 0){
+      method = 'delete';
+    }
+    else {
+      method = 'put';
+      body = {
+        quantity,
+      };
+    }
+    return axios[method](url, body || null, axiosAuthHeader())
+      .then( response => response.data);
+};
+
 const addToCart = (cart, product, quantity, lineItem)=> {
   return (dispatch, getState)=> {
     const state = getState();
     const userId = state.auth.id;
-    if(lineItem){
-        return axios.put(`/api/users/${userId}/orders/${cart.id}/lineItems/${lineItem.id}`, { quantity: lineItem.quantity + quantity}, axiosAuthHeader())
-          .then( response => response.data)
-          .then( orders => dispatch(loadOrders(orders))); 
+    let promise;
+    if(userId){
+      promise = addToServerCart(cart, product, quantity, lineItem)
     }
-    else {
-        return axios.post(`/api/users/${userId}/orders/${cart.id}/lineItems`, { quantity: 1, productId: product.id}, axiosAuthHeader())
-          .then( response => response.data)
-          .then( orders => dispatch(loadOrders(orders))); 
-    }
-  }
+    return promise
+      .then( orders => dispatch(loadOrders(orders))); 
+  };
 };
+
 const removeFromCart = (cart, lineItem)=> {
   return (dispatch, getState)=> {
     const state = getState();
     const userId = state.auth.id;
-    if(lineItem.quantity !== 1){
-        return axios.put(`/api/users/${userId}/orders/${cart.id}/lineItems/${lineItem.id}`, { quantity: --lineItem.quantity}, axiosAuthHeader())
-          .then( response => response.data)
-          .then( orders => dispatch(loadOrders(orders))); 
+    let promise;
+    if(userId){
+      promise = removeFromServerCart(cart, lineItem);
     }
-    else {
-        return axios.delete(`/api/users/${userId}/orders/${cart.id}/lineItems/${lineItem.id}`, axiosAuthHeader())
-          .then( response => response.data)
-          .then( orders => dispatch(loadOrders(orders))); 
-    }
-  }
+    return promise
+      .then( orders => dispatch(loadOrders(orders))); 
+  };
 };
 
 const reset = ()=> {
