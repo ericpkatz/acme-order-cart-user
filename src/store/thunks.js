@@ -24,6 +24,7 @@ const axiosAuthHeader = ()=> ({
     authorization: window.localStorage.getItem('token')
   }
 });
+
 const exchangeTokenForAuth = (history)=> {
   return (dispatch)=> {
     const token = window.localStorage.getItem('token');
@@ -40,7 +41,7 @@ const exchangeTokenForAuth = (history)=> {
       return dispatch(_setAuth(auth));
     }) 
     .then(()=> {
-      dispatch(loadOrders());
+      return dispatch(loadOrders());
       if(history){
         history.push('/cart');
       }
