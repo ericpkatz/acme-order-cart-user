@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { loadCount, reset, loadProducts, loadOrders, exchangeTokenForAuth } from './store';
+import { loadProducts, loadCount, reset, exchangeTokenForAuth } from './store';
 import { Route, HashRouter as Router } from 'react-router-dom';
 import Orders from './Orders';
 import Cart from './Cart';
