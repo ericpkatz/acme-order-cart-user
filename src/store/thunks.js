@@ -41,14 +41,14 @@ const exchangeTokenForAuth = (history)=> {
       return dispatch(_setAuth(auth));
     }) 
     .then(()=> {
-      return dispatch(loadOrders());
       if(history){
         history.push('/cart');
       }
+      return dispatch(loadOrders());
       
     })
     .catch( ex => {
-      if(ex.response.status === 401){
+      if(ex.response && ex.response.status === 401){
         window.localStorage.removeItem('token');
       }
     });
