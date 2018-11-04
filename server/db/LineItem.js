@@ -2,6 +2,9 @@ const conn = require('./conn');
 const LineItem = conn.define('lineItem', {
   quantity: {
     type: conn.Sequelize.INTEGER,
+    validate: {
+      min: 1
+    },
     defaultValue: 1
   },
 }, {
