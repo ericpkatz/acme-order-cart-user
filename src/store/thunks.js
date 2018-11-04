@@ -129,7 +129,7 @@ const removeFromServerCart = (cart, lineItem)=> {
   const quantity = lineItem.quantity - 1;
   let method, body;
   const url = `/api/users/${cart.userId}/orders/${cart.id}/lineItems/${lineItem.id}`;
-  if(lineItem.quantity === 0){
+  if(quantity === 0){
     method = 'delete';
   }
   else {
@@ -138,7 +138,11 @@ const removeFromServerCart = (cart, lineItem)=> {
       quantity,
     };
   }
-  return axios[method](url, body || null, axiosAuthHeader())
+  if(method === 'delete'){
+    return axios.delete(url, axiosAuthHeader())
+      .then( response => response.body);
+  }
+  return axios[method](url, body , axiosAuthHeader())
     .then( response => response.data);
 };
 
